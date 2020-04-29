@@ -1,5 +1,7 @@
 package com.vinidsl.redditsample.ui.adapter
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
@@ -24,7 +26,6 @@ class RedditEntryAdapter : PagedListAdapter<RedditEntry, RedditEntryAdapter.Entr
             override fun areContentsTheSame(oldItem: RedditEntry, newItem: RedditEntry): Boolean {
                 return oldItem == newItem
             }
-
         }
     }
 
@@ -42,6 +43,21 @@ class RedditEntryAdapter : PagedListAdapter<RedditEntry, RedditEntryAdapter.Entr
         holder.itemView.setOnClickListener {
             val bundle = bundleOf(DetailFragment.REDDIT_ENTRY_PARAM to redditEntryItem)
             it.findNavController().navigate(R.id.action_mainListFragment_to_detailFragment, bundle)
+        }
+        holder.redditEntryItemBinding.btDismiss.setOnClickListener {
+            //TODO this is just showing a remove animation, when you scroll you can see the item again
+            // I think I should be research a little bit more to how to delete an item from PagedListAdapter
+            // and PageKeyedDataSource
+            notifyItemRemoved(position)
+        }
+        holder.redditEntryItemBinding.ivThumbnail.setOnClickListener {
+            // validate if the item has a thumbnail and a url
+            if (!redditEntryItem!!.thumbnail.isNullOrEmpty() && redditEntryItem.thumbnail!!.startsWith("https")
+                && !redditEntryItem.url.isNullOrEmpty()) {
+                val i = Intent(Intent.ACTION_VIEW)
+                i.data = Uri.parse(redditEntryItem.url)
+                holder.itemView.context.startActivity(i)
+            }
         }
     }
 
