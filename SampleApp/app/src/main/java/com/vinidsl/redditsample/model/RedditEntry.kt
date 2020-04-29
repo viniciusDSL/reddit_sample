@@ -14,4 +14,6 @@ class RedditEntry {
 
     var url : String? = null
 
+    var name: String? = null
+
 }

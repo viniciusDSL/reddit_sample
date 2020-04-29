@@ -11,9 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.vinidsl.redditsample.R
 import com.vinidsl.redditsample.model.RedditEntry
+import com.vinidsl.redditsample.network.RedditAPI
+import com.vinidsl.redditsample.network.response.TopEntriesResponse
 import com.vinidsl.redditsample.ui.RedditEntryAdapter
 import com.vinidsl.redditsample.viewmode.MainListViewModel
 import kotlinx.android.synthetic.main.main_list_fragment.*
+import retrofit2.Call
+import retrofit2.Response
 
 class MainListFragment : Fragment() {
 
@@ -42,26 +46,28 @@ class MainListFragment : Fragment() {
         )
         rv_entries.addItemDecoration(dividerItemDecoration)
         rv_entries.adapter = redditEntryAdapter
-        // TODO remove
-        mockRedditEntries()
-    }
 
-    fun mockRedditEntries() {
-        val mockedEntries = arrayListOf<RedditEntry>()
+        if (redditEntryAdapter.itemCount==0) {
+            RedditAPI.REDDIT_SERVICE.getEntries().enqueue(object :
+                retrofit2.Callback<TopEntriesResponse> {
 
-        for (c in 0..10) {
-            mockedEntries.add(
-                RedditEntry().apply {
-                    title = "title $c"
-                    commentsCount = c*100
-                    author = "Vini"
-                    url = "https://external-preview.redd.it/cjRxFqjsk-jWzToptU9yGfXgfTOSjuieSXqr87PWBuA.jpg?auto=webp&amp;s=8d30cc191ba001b063f7045a5d8a24b66dc6c386"
-                    created = 1478680045.0
-                    thumbnail = "https://b.thumbs.redditmedia.com/0Bz7ivQoXUIjSSTm-5WOtDkXrmGht62Z9Mbq-WQkmMA.jpg"
+                override fun onFailure(call: Call<TopEntriesResponse>, t: Throwable) {
+
                 }
-            )
+
+                override fun onResponse(
+                    call: Call<TopEntriesResponse>,
+                    response: Response<TopEntriesResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        response.body()?.data?.children?.let {
+                            redditEntryAdapter.addRedditEntries(it)
+                        }
+                    }
+                }
+
+            })
         }
-        redditEntryAdapter.addRedditEntries(mockedEntries)
     }
 
 }
