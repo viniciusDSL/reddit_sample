@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable name="viewModel" type="com.vinidsl.redditsample.viewmodel.MainListViewModel" />
+    </data>
+<FrameLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragment.MainListFragment">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/srl_entries"
+        app:refreshing="@{viewModel.isRefreshing}"
+        app:onRefreshListener="@{() -> viewModel.onRefresh()}"
+        app:setEnabled = "@{viewModel.canRefresh}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_entries"
@@ -11,4 +24,6 @@
         android:layout_height="match_parent"
         tools:listitem="@layout/reddit_entry_item"/>
 
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </FrameLayout>
+</layout>

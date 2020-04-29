@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.vinidsl.redditsample.R
+import com.vinidsl.redditsample.databinding.MainListFragmentBinding
 import com.vinidsl.redditsample.ui.adapter.RedditEntryAdapter
 import com.vinidsl.redditsample.viewmodel.MainListViewModel
 import kotlinx.android.synthetic.main.main_list_fragment.*
@@ -21,6 +21,8 @@ class MainListFragment : Fragment() {
     }
 
     private lateinit var viewModel: MainListViewModel
+    private lateinit var binding: MainListFragmentBinding
+
     private var redditEntryAdapter =
         RedditEntryAdapter()
 
@@ -28,14 +30,16 @@ class MainListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.main_list_fragment, container, false)
+        binding = MainListFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         //TODO check deprecation
         viewModel = ViewModelProviders.of(this).get(MainListViewModel::class.java)
-        // TODO: Use the ViewModel
+        binding.viewModel = viewModel
+
         rv_entries.layoutManager = LinearLayoutManager(context)
         val dividerItemDecoration = DividerItemDecoration(
             context, DividerItemDecoration.VERTICAL
@@ -45,6 +49,7 @@ class MainListFragment : Fragment() {
 
         viewModel.getRedditEntryLiveData().observe(viewLifecycleOwner, Observer {
             redditEntryAdapter.submitList(it)
+            viewModel.enableRefresh()
         })
     }
 
