@@ -21,7 +21,8 @@
             android:background="@drawable/blue_circle_shape"
             bind:layout_constraintBottom_toTopOf="@+id/guideline1"
             bind:layout_constraintStart_toStartOf="parent"
-            bind:layout_constraintTop_toTopOf="parent" />
+            bind:layout_constraintTop_toTopOf="parent"
+            bind:readStatus="@{entry.name}"/>
 
         <TextView
             android:id="@+id/tv_date_created"

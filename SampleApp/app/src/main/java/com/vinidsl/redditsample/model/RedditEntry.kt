@@ -1,5 +1,9 @@
 package com.vinidsl.redditsample.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class RedditEntry (
 
     var title : String? = null,
@@ -16,4 +20,4 @@ data class RedditEntry (
 
     var name: String? = null
 
-)
+) : Parcelable
