@@ -1,23 +1,18 @@
-package com.vinidsl.redditsample.fragment
+package com.vinidsl.redditsample.ui.fragment
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-
 import com.vinidsl.redditsample.R
-import com.vinidsl.redditsample.model.RedditEntry
-import com.vinidsl.redditsample.network.RedditAPI
-import com.vinidsl.redditsample.network.response.TopEntriesResponse
-import com.vinidsl.redditsample.ui.RedditEntryAdapter
-import com.vinidsl.redditsample.viewmode.MainListViewModel
+import com.vinidsl.redditsample.ui.adapter.RedditEntryAdapter
+import com.vinidsl.redditsample.viewmodel.MainListViewModel
 import kotlinx.android.synthetic.main.main_list_fragment.*
-import retrofit2.Call
-import retrofit2.Response
 
 class MainListFragment : Fragment() {
 
@@ -26,7 +21,8 @@ class MainListFragment : Fragment() {
     }
 
     private lateinit var viewModel: MainListViewModel
-    private var redditEntryAdapter = RedditEntryAdapter()
+    private var redditEntryAdapter =
+        RedditEntryAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,27 +43,9 @@ class MainListFragment : Fragment() {
         rv_entries.addItemDecoration(dividerItemDecoration)
         rv_entries.adapter = redditEntryAdapter
 
-        if (redditEntryAdapter.itemCount==0) {
-            RedditAPI.REDDIT_SERVICE.getEntries().enqueue(object :
-                retrofit2.Callback<TopEntriesResponse> {
-
-                override fun onFailure(call: Call<TopEntriesResponse>, t: Throwable) {
-
-                }
-
-                override fun onResponse(
-                    call: Call<TopEntriesResponse>,
-                    response: Response<TopEntriesResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        response.body()?.data?.children?.let {
-                            redditEntryAdapter.addRedditEntries(it)
-                        }
-                    }
-                }
-
-            })
-        }
+        viewModel.getRedditEntryLiveData().observe(viewLifecycleOwner, Observer {
+            redditEntryAdapter.submitList(it)
+        })
     }
 
 }
