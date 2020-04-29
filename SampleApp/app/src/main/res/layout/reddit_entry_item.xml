@@ -32,7 +32,8 @@
             bind:layout_constraintBottom_toTopOf="@+id/guideline1"
             bind:layout_constraintEnd_toEndOf="parent"
             bind:layout_constraintTop_toTopOf="parent"
-            tools:text="24 hours ago" />
+            tools:text="24 hours ago"
+            bind:timeAgo="@{entry.created}"/>
 
         <TextView
             android:id="@+id/tv_author"
@@ -49,8 +50,6 @@
             bind:layout_constraintTop_toTopOf="parent"
             tools:text="User 1111111111111" />
 
-        <!--TODO create custom bindings for image and created date-->
-
         <ImageView
             android:id="@+id/iv_thumbnail"
             android:layout_width="150dp"
@@ -59,7 +58,8 @@
             android:layout_marginTop="16dp"
             bind:layout_constraintStart_toStartOf="parent"
             bind:layout_constraintTop_toTopOf="@+id/guideline1"
-            bind:srcCompat="@drawable/image_default" />
+            bind:srcCompat="@drawable/image_default"
+            bind:imageUrl="@{entry.thumbnail}"/>
 
         <TextView
             android:id="@+id/tv_title"
@@ -68,12 +68,16 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="16dp"
+            android:scrollbars = "vertical"
             android:text="@{entry.title}"
             bind:layout_constraintBottom_toBottomOf="@+id/iv_thumbnail"
             bind:layout_constraintEnd_toEndOf="parent"
             bind:layout_constraintStart_toEndOf="@+id/iv_thumbnail"
             bind:layout_constraintTop_toTopOf="@+id/guideline1"
-            tools:text="Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur," />
+            tools:text="Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur,
+Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur,
+Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur,
+Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur," />
 
         <Button
             android:id="@+id/bt_dismiss"
@@ -106,7 +110,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            bind:layout_constraintGuide_percent="0.067031465" />
+            bind:layout_constraintGuide_percent="0.06" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
